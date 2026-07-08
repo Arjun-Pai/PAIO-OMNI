@@ -1,0 +1,11 @@
+faster-whisper
+sounddevice
+soundfile
+numpy
+requests
+opencv-python
+psutil
+pyttsx3
+qwen-tts
+torch
+torchaudio
