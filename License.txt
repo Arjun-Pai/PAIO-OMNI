@@ -1,5 +1,5 @@
 COPYRIGHT NOTICE
-Copyright © 2026 PAIO Inc. All Rights Reserved.
+#Copyright © 2026 PAIO Inc. All Rights Reserved.#
 
 All proprietary rights, intellectual property rights, titles, and interests in and to this software, including but not limited to any source code, object code, scripts, binaries, algorithms, visual interfaces, documentation, architecture, system design, and files (collectively referred to as the "Software"), are owned exclusively by PAIO Inc.
 
