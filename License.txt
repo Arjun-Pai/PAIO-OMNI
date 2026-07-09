@@ -1,56 +1,175 @@
+================================================================================
+                    PAIO Inc. SOFTWARE LICENSE AGREEMENT
+================================================================================
+
 **Copyright © 2026 PAIO Inc. All Rights Reserved.**
 
-All proprietary rights, intellectual property rights, titles, and interests in and to this software, including but not limited to any source code, object code, scripts, binaries, algorithms, visual interfaces, documentation, architecture, system design, and files (collectively referred to as the "Software"), are owned exclusively by PAIO Inc.
+All proprietary rights, intellectual property rights, titles, and interests in 
+and to this software, including but not limited to any source code, object code, 
+scripts, binaries, algorithms, visual layouts, design patterns, and trade secrets 
+are exclusively owned by PAIO Inc. and are protected by international copyright 
+and intellectual property laws.
 
+================================================================================
 SECTION 1: ABSOLUTE PROHIBITION OF COPYING AND REPRODUCTION
-1.1 No Duplication: You shall not, under any circumstances, copy, duplicate, replicate, clone, or reproduce the Software, its source code, or any of its constituent files, lines of code, or visual layouts, in whole or in part, onto any local machine, cloud storage, external media, paper repository, or any other format now known or hereafter devised.
+================================================================================
 
-1.2 No Snippet Extraction: The protection under this section applies to the entire codebase as well as individual snippets, functions, classes, variables, or custom logic blocks. Extracting even a minor portion of the logic for use in external scripts is strictly prohibited.
+1.1 No Duplication
+You shall not, under any circumstances, copy, duplicate, replicate, clone, or 
+reproduce the Software, its source code, or any of its constituent files, lines 
+of code, or visual layout elements. This prohibition applies to all forms of 
+reproduction, whether partial or complete, temporary or permanent, and whether 
+in electronic, magnetic, optical, or any other medium.
 
-1.3 Prohibition on Automated Scraping: You are expressly forbidden from using automated scripts, web scrapers, crawlers, spiders, or artificial intelligence models to parse, extract, read, index, or copy any section of the source code or asset pool.
+1.2 No Snippet Extraction
+The protection under this section applies to the entire codebase as well as 
+individual snippets, functions, classes, variables, or custom logic blocks. 
+Extracting even a minimal fragment of code for reuse, reference, or adaptation 
+is strictly prohibited.
 
+1.3 Prohibition on Automated Scraping
+You are expressly forbidden from using automated scripts, web scrapers, crawlers, 
+spiders, or artificial intelligence models to parse, extract, read, index, or 
+cache any portion of this Software or its repository. This includes, but is not 
+limited to, machine learning training data extraction, code indexing services, 
+and AI model training pipelines.
+
+================================================================================
 SECTION 2: RESTRICTIONS ON MODIFICATION AND DERIVATIVE WORKS
-2.1 No Alteration: You shall not modify, adapt, alter, change, patch, or translate the Software or any file within the directory structure.
+================================================================================
 
-2.2 No Derivative Works: You are strictly prohibited from creating derivative works, forks, branch adaptations, spin-offs, or secondary applications based on the frameworks, logic design, operational structures, or logic flow found within this Software. Any modification made in violation of this clause automatically becomes the exclusive intellectual property of PAIO Inc.
+2.1 No Alteration
+You shall not modify, adapt, alter, change, patch, or translate the Software 
+or any file within the directory structure. Any attempt to improve, enhance, 
+customize, or repurpose the Software is strictly prohibited.
 
+2.2 No Derivative Works
+You are strictly prohibited from creating derivative works, forks, branch 
+adaptations, spin-offs, or secondary applications based on the frameworks, 
+logic design, operational patterns, or methodologies of this Software.
+
+================================================================================
 SECTION 3: PROHIBITION OF DISTRIBUTION AND REDISTRIBUTION
-3.1 No Private Distribution: You shall not distribute, lease, rent, lend, share, email, or transmit the Software or any copy of it to any third party, including family members, colleagues, external contractors, or business associates.
+================================================================================
 
-3.2 No Public Distribution: You are explicitly banned from uploading, publishing, hosting, or mirroring this Software on public or private cloud systems, public code hosting platforms (including but not limited to GitHub, GitLab, Bitbucket), file-sharing networks, community forums, or online marketplaces.
+3.1 No Private Distribution
+You shall not distribute, lease, rent, lend, share, email, or transmit the 
+Software or any copy of it to any third party, including family members, 
+colleagues, external contractors, or business partners, regardless of whether 
+compensation is involved.
 
-3.3 No Sublicensing: You do not possess the right to sublicense, assign, transfer, or delegate your access or any permitted viewings of the Software to any other individual, organization, or entity.
+3.2 No Public Distribution
+You are explicitly banned from uploading, publishing, hosting, or mirroring 
+this Software on public or private cloud systems, public code hosting platforms 
+(including but not limited to GitHub, GitLab, Bitbucket), software registries, 
+or any other repository infrastructure.
 
+3.3 No Sublicensing
+You do not possess the right to sublicense, assign, transfer, or delegate your 
+access or any permitted viewings of the Software to any other individual, 
+organization, or entity under any circumstances.
+
+================================================================================
 SECTION 4: REVERSE ENGINEERING, DECOMPILATION, AND DECRYPTION
-4.1 No Reverse Engineering: You shall not reverse engineer, decompile, disassemble, de-obfuscate, or attempt to derive the underlying source code, system mechanics, or structural logic of any compiled binaries, dependencies, or modules within this Software.
+================================================================================
 
-4.2 No Bypassing Security: You shall not disable, circumvent, tamper with, or bypass any license key checks, system telemetry, offline validation gates, or digital rights management controls integrated into the core architecture.
+4.1 No Reverse Engineering
+You shall not reverse engineer, decompile, disassemble, de-obfuscate, or attempt 
+to derive the underlying source code, system mechanics, or structural logic of 
+any compiled, obfuscated, or proprietary components of the Software.
 
+4.2 No Bypassing Security
+You shall not disable, circumvent, tamper with, or bypass any license key checks, 
+system telemetry, offline validation gates, or digital rights management controls 
+integrated into the Software.
+
+================================================================================
 SECTION 5: INTELLECTUAL PROPERTY AND TRADE SECRETS
-5.1 Trade Secret Status: The structure, organization, layout, implementation logic, and specific orchestration behaviors of the Software constitute highly valuable, trade secrets of PAIO Inc. Access to or viewing of the source code does not transfer any right, title, or interest to you.
+================================================================================
 
-5.2 Preservation of Proprietary Notices: You must not remove, obscure, cover, or alter any copyright notices, trademark legends, confidentiality warnings, or corporate brand markings present inside the code files or displayed in the software console output.
+5.1 Trade Secret Status
+The structure, organization, layout, implementation logic, and specific 
+orchestration behaviors of the Software constitute highly valuable, trade 
+secrets of PAIO Inc. Access to this Software does not constitute a waiver of 
+trade secret status or any intellectual property protections.
 
+5.2 Preservation of Proprietary Notices
+You must not remove, obscure, cover, or alter any copyright notices, trademark 
+legends, confidentiality warnings, or corporate brand markings present inside 
+the Software or its documentation.
+
+================================================================================
 SECTION 6: THE ON-DEMAND PERMISSION REQUIREMENT
-6.1 Explicit Written Consent: Any action not explicitly prohibited by this license still requires prior, express, and formal written authorization signed directly by an authorized representative of PAIO Inc.
+================================================================================
 
-6.2 Revocation of Permission: Any custom permissions granted by PAIO Inc. are non-transferable, temporary, and can be unilaterally revoked at any time by PAIO Inc. without prior notice or statement of cause. Upon revocation, any materials held under that specific permission must be instantly purged and certified destroyed.
+6.1 Explicit Written Consent
+Any action not explicitly prohibited by this license still requires prior, 
+express, and formal written authorization signed directly by an authorized 
+representative of PAIO Inc. The absence of an explicit prohibition does not 
+imply permission.
 
+6.2 Revocation of Permission
+Any custom permissions granted by PAIO Inc. are non-transferable, temporary, 
+and can be unilaterally revoked at any time by PAIO Inc. without prior notice 
+or statement of cause.
+
+================================================================================
 SECTION 7: BREACH, TERMINATION, AND LEGAL REMEDIATION
-7.1 Automatic Termination: Any violation of any rule, restriction, or clause outlined in this Agreement will result in the immediate, automatic termination of any access rights you possess.
+================================================================================
 
-7.2 Injunctions and Relief: You acknowledge that any unauthorized copying, modification, or distribution of this Software will cause irreparable damage to PAIO Inc. for which monetary compensation alone would be inadequate. PAIO Inc. shall be entitled to seek immediate injunctive relief to stop the breach, in addition to any monetary damages.
+7.1 Automatic Termination
+Any violation of any rule, restriction, or clause outlined in this Agreement 
+will result in the immediate, automatic termination of any access rights you 
+possess.
 
-7.3 Indemnification: In the event that a legal dispute arises from your unauthorized use, copying, or redistribution of the Software, you agree to fully indemnify, defend, and hold harmless PAIO Inc. and its operators from any legal fees, court costs, damages, loss of business revenue, or penalties incurred.
+7.2 Injunctions and Relief
+You acknowledge that any unauthorized copying, modification, or distribution 
+of this Software will cause irreparable damage to PAIO Inc. for which monetary 
+compensation alone would be an insufficient remedy. You therefore consent to 
+injunctive relief without the requirement of PAIO Inc. to post bond.
 
+7.3 Indemnification
+In the event that a legal dispute arises from your unauthorized use, copying, 
+or redistribution of the Software, you agree to fully indemnify, defend, and 
+hold harmless PAIO Inc., its officers, directors, employees, and affiliates 
+from all claims, damages, and legal fees arising from such breach.
+
+================================================================================
 SECTION 8: NO WARRANTY AND LIMITATION OF LIABILITY
-8.1 As-Is Provision: THE SOFTWARE IS PROVIDED BY PAIO INC. "AS IS" AND WITH ALL FAULTS. PAIO INC. MAKES NO EXPRESS OR IMPLIED WARRANTIES, REPRESENTATIONS, OR ENDORSEMENTS WHATSOEVER regarding the system's runtime stability, security posture, or fitness for a particular usage scope.
+================================================================================
 
-8.2 Exclusion of Liability: IN NO EVENT SHALL PAIO INC. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING BUT NOT LIMITED TO CORRUPTION OF HARD DRIVES, LOSS OF LOCAL SYSTEM DATA, OPERATIONAL CONFIGURATION BREAKS, OR MACHINE DOWNTIME) ARISING IN ANY WAY OUT OF THE USE OR INABILITY TO RUN THIS SOFTWARE framework.
+8.1 As-Is Provision
+THE SOFTWARE IS PROVIDED BY PAIO INC. "AS IS" AND WITH ALL FAULTS. PAIO INC. 
+MAKES NO EXPRESS OR IMPLIED WARRANTIES, REPRESENTATIONS, OR ENDORSEMENTS 
+WHATSOEVER regarding the system's performance, reliability, merchantability, 
+fitness for a particular purpose, or non-infringement of third-party rights.
 
+8.2 Exclusion of Liability
+IN NO EVENT SHALL PAIO INC. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING BUT NOT LIMITED TO 
+CORRUPTION OF HARD DRIVES, LOSS OF DATA, BUSINESS INTERRUPTION, OR PROFIT 
+LOSS), even if PAIO Inc. has been advised of the possibility of such damages.
+
+================================================================================
 SECTION 9: GOVERNING LAW AND SEVERABILITY
-9.1 Jurisdiction: This Agreement, its rules, and its strict enforcement protocols shall be governed by, interpreted, and construed exclusively under the prevailing laws of the corporate registration state of PAIO Inc., without regard to conflict of law principles.
+================================================================================
 
-9.2 Severability: If any provision or sub-clause of this License is found by a court of competent jurisdiction to be invalid, illegal, or unenforceable, the validity and enforcement of the remaining clauses and restrictions shall remain entirely unaffected and fully active.
+9.1 Jurisdiction
+This Agreement, its rules, and its strict enforcement protocols shall be 
+governed by, interpreted, and construed exclusively under the prevailing laws 
+of the corporate registration state of PAIO Inc. and applicable international 
+intellectual property conventions.
 
-BY CONTINUING TO MANAGE, RETAIN, EXECUTE, OR VIEW THE REPOSITORY FILES, YOU ACKNOWLEDGE FULL UNDERSTANDING OF THESE RULES AND RECOGNIZE THAT ALL RIGHTS REMAIN EXCLUSIVELY RESERVED BY PAIO INC.
+9.2 Severability
+If any provision or sub-clause of this License is found by a court of competent 
+jurisdiction to be invalid, illegal, or unenforceable, the validity and 
+enforcement of the remaining clauses shall be unaffected and shall remain in 
+full force and effect.
+
+================================================================================
+
+BY CONTINUING TO MANAGE, RETAIN, EXECUTE, OR VIEW THE REPOSITORY FILES, YOU 
+ACKNOWLEDGE FULL UNDERSTANDING OF THESE RULES AND RECOGNIZE THAT ALL RIGHTS 
+REMAIN EXCLUSIVELY RESERVED BY PAIO INC.
+
+================================================================================
