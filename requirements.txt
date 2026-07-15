@@ -1,0 +1,8 @@
+faster-whisper
+sounddevice
+soundfile
+numpy
+requests
+psutil
+torch
+torchaudio
