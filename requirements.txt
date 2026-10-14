@@ -1,0 +1,28 @@
+faster-whisper
+sounddevice
+soundfile
+numpy
+requests
+psutil
+torch
+torchaudio
+
+# v3.0 additions
+openai              # OpenAI-compatible client for OpenRouter/Groq/ZenMux
+python-dotenv       # loads .env
+pynput              # Home-key push-to-talk hotkey + barge-in interrupt
+
+# v3.1 additions
+PySide6             # native bubble widget (replaces pystray/pillow/tray.py)
+sentence-transformers  # RAG embeddings (all-MiniLM-L6-v2)
+chromadb            # RAG vector store
+violawake[audio,download]   # wake-word training + runtime (replaces openwakeword)
+
+# v3.2: no new dependencies — ensemble.py uses stdlib concurrent.futures,
+# barge-in detection reuses sounddevice/numpy already listed above.
+
+# build only (not needed at runtime unless you're building the .exe yourself)
+pyinstaller
+
+# optional dev utility (check_voices.py — Windows SAPI voice listing only)
+pyttsx3

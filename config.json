@@ -1,0 +1,43 @@
+{
+  "vault_path": "D:\\Brain",
+  "hotkey": "home",
+  "mic_threshold": 0.315992146730423,
+  "mic_device_index": null,
+  "cloud_provider_preference": null,
+  "openrouter_model_priority": [
+    "nvidia/nemotron-3.5-lightning:free",
+    "qwen/qwen3.8-27b:free",
+    "google/gemma-4-26b-a4b-it:free",
+    "nex-agi/nex-n2.5-pro:free",
+    "nex-agi/nex-n2.5-mini:free",
+    "dots-studio/dots-3-note-preview:free",
+    "inclusionai/ling-3.0-flash-sante:free",
+    "inclusionai/ling-3.0-flash-fin:free",
+    "thinkingmachines/inkling-small:free",
+    "cohere/north-mini-code:free",
+    "stealth/space-bunny-alpha",
+    "liquid/lfm-2.5-2.6b:free"
+  ],
+  "groq_model_priority": [
+    "qwen/qwen3.8-27b",
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+    "openai/gpt-oss-safeguard-20b",
+    "canopylabs/orpheus-v1-english",
+    "canopylabs/orpheus-arabic-saudi",
+    "meta-llama/llama-prompt-guard-2-86m",
+    "allam-2-7b",
+    "meta-llama/llama-prompt-guard-2-22m"
+  ],
+  "ollama_cloud_model_priority": [
+    "nemotron-3-ultra:cloud",
+    "nemotron-3-super:cloud",
+    "glm-5.1:cloud",
+    "kimi-k2.6:cloud",
+    "qwen3.5:cloud",
+    "qwen3-coder:480b-cloud",
+    "deepseek-v4-flash:cloud",
+    "mistral-large-3:675b-cloud",
+    "minimax-m3:cloud"
+  ]
+}

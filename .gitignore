@@ -1,0 +1,14 @@
+.env
+config.json
+session_state.json
+paio.log
+test_report.html
+voices/*.wav
+voices/*.mp3
+voices/*.m4a
+models/hey_paio.onnx
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec.bak
