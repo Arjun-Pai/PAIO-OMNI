@@ -7,22 +7,30 @@ psutil
 torch
 torchaudio
 
-# v3.0 additions
-openai              # OpenAI-compatible client for OpenRouter/Groq/ZenMux
-python-dotenv       # loads .env
-pynput              # Home-key push-to-talk hotkey + barge-in interrupt
+# OpenAI-compatible cloud providers
+openai
 
-# v3.1 additions
-PySide6             # native bubble widget (replaces pystray/pillow/tray.py)
-sentence-transformers  # RAG embeddings (all-MiniLM-L6-v2)
-chromadb            # RAG vector store
-violawake[audio,download]   # wake-word training + runtime (replaces openwakeword)
+# Environment variable loading
+python-dotenv
 
-# v3.2: no new dependencies — ensemble.py uses stdlib concurrent.futures,
-# barge-in detection reuses sounddevice/numpy already listed above.
+# Home-key push-to-talk and interruption support
+pynput
 
-# build only (not needed at runtime unless you're building the .exe yourself)
+# Native floating orb interface
+PySide6
+
+# RAG embeddings and vector storage
+sentence-transformers
+chromadb
+
+# Wake-word training and runtime support
+violawake[audio,download]
+
+# Piper TTS is an external executable and voice model.
+# Install Piper separately and place it in models/piper/.
+
+# Build dependency; only required when creating executables.
 pyinstaller
 
-# optional dev utility (check_voices.py — Windows SAPI voice listing only)
+# Optional Windows voice utility.
 pyttsx3
