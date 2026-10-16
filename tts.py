@@ -1,28 +1,39 @@
-"""PAIO-Omni TTS using Piper (bryce medium).
+"""PAIO-Omni TTS using Piper.
 
 Expected default files:
-  models/piper/piper.exe
-  models/piper/en_US-bryce-medium.onnx
-  models/piper/en_US-bryce-medium.onnx.json
 
-v3.2: speaking is interruptible — see interrupt() / get_and_clear_interruption().
-Text is split into sentences and played one at a time, polling the
-interrupt flag both between sentences AND during playback of the
-current one (so a barge-in can cut off mid-sentence, not just wait for
-it to finish). Whatever wasn't said gets stashed for orchestrator.py to
-log to the vault.
+Windows:
+    models/piper/piper.exe
+
+Linux/macOS:
+    models/piper/piper
+
+Voice files:
+    models/piper/en_US-bryce-medium.onnx
+    models/piper/en_US-bryce-medium.onnx.json
+
+The paths can be overridden with:
+
+    PAIO_PIPER_EXE
+    PAIO_PIPER_MODEL
+    PAIO_PIPER_CONFIG
 """
 
+from __future__ import annotations
+
 import os
+import platform
 import queue
 import re
 import subprocess
 import tempfile
 import threading
 import time
+from pathlib import Path
 
 import sounddevice as sd
 import soundfile as sf
+
 
 _tts_queue = queue.Queue()
 _worker_thread = None
@@ -30,91 +41,184 @@ _loaded = False
 _warned_not_loaded = False
 
 _interrupt_event = threading.Event()
-_last_interruption = None  # {"original": str, "spoken": [str], "remaining": [str]} or None
+_last_interruption = None
 _lock = threading.Lock()
 
-_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-_PIPER_DIR = os.path.join(_BASE_DIR, "models", "piper")
+_BASE_DIR = Path(__file__).resolve().parent
+_PIPER_DIR = _BASE_DIR / "models" / "piper"
 
 
-def _first_existing(*paths: str) -> str:
-    for p in paths:
-        if p and os.path.exists(p):
-            return p
-    return paths[0] if paths else ""
+def _first_existing(*paths: Path) -> str:
+    for path in paths:
+        if path and path.exists():
+            return str(path)
+    return str(paths[0]) if paths else ""
 
 
-_DEFAULT_EXE = _first_existing(
-    os.path.join(_PIPER_DIR, "piper.exe"),
-    os.path.join(_PIPER_DIR, "piper", "piper.exe"),
-)
+def _default_piper_executable() -> str:
+    override = os.environ.get("PAIO_PIPER_EXE")
+    if override:
+        return override
 
-_DEFAULT_MODEL = _first_existing(
-    os.path.join(_PIPER_DIR, "en_US-bryce-medium.onnx"),
-    os.path.join(_PIPER_DIR, "mv2.onnx"),
-    os.path.join(_PIPER_DIR, "piper", "en_US-bryce-medium.onnx"),
-    os.path.join(_PIPER_DIR, "piper", "mv2.onnx"),
-)
+    if platform.system() == "Windows":
+        candidates = (
+            _PIPER_DIR / "piper.exe",
+            _PIPER_DIR / "piper" / "piper.exe",
+        )
+    else:
+        candidates = (
+            _PIPER_DIR / "piper",
+            _PIPER_DIR / "piper" / "piper",
+        )
+
+    return _first_existing(*candidates)
+
+
+def _default_voice_model() -> str:
+    override = os.environ.get("PAIO_PIPER_MODEL")
+    if override:
+        return override
+
+    candidates = (
+        _PIPER_DIR / "en_US-bryce-medium.onnx",
+        _PIPER_DIR / "mv2.onnx",
+        _PIPER_DIR / "piper" / "en_US-bryce-medium.onnx",
+        _PIPER_DIR / "piper" / "mv2.onnx",
+    )
+
+    return _first_existing(*candidates)
 
 
 def _auto_config_for_model(model_path: str) -> str:
-    if model_path.endswith(".onnx"):
-        same_stem = model_path + ".json"
-        if os.path.exists(same_stem):
-            return same_stem
+    override = os.environ.get("PAIO_PIPER_CONFIG")
+    if override:
+        return override
 
-    candidates = [
-        os.path.join(_PIPER_DIR, "en_US-bryce-medium.onnx.json"),
-        os.path.join(_PIPER_DIR, "piper", "en_US-bryce-medium.onnx.json"),
-    ]
-    for c in candidates:
-        if os.path.exists(c):
-            return c
-    return model_path + ".json"
+    model = Path(model_path)
 
-_PIPER_EXE = os.environ.get("PAIO_PIPER_EXE", _DEFAULT_EXE)
-_PIPER_MODEL = os.environ.get("PAIO_PIPER_MODEL", _DEFAULT_MODEL)
-_PIPER_CONFIG = os.environ.get("PAIO_PIPER_CONFIG", _auto_config_for_model(_PIPER_MODEL))
+    if model.suffix == ".onnx":
+        same_stem = Path(f"{model}.json")
+        if same_stem.exists():
+            return str(same_stem)
+
+    candidates = (
+        model.parent / f"{model.name}.json",
+        _PIPER_DIR / "en_US-bryce-medium.onnx.json",
+        _PIPER_DIR / "piper" / "en_US-bryce-medium.onnx.json",
+    )
+
+    return _first_existing(*candidates)
 
 
-def _split_sentences(text: str) -> list:
+_PIPER_EXE = _default_piper_executable()
+_PIPER_MODEL = _default_voice_model()
+_PIPER_CONFIG = _auto_config_for_model(_PIPER_MODEL)
+
+
+def piper_status() -> dict:
+    """Return the current Piper asset status."""
+    executable = Path(_PIPER_EXE)
+    model = Path(_PIPER_MODEL)
+    config = Path(_PIPER_CONFIG)
+
+    return {
+        "executable": str(executable),
+        "model": str(model),
+        "config": str(config),
+        "executable_exists": executable.exists(),
+        "model_exists": model.exists(),
+        "config_exists": config.exists(),
+        "ready": executable.exists() and model.exists() and config.exists(),
+    }
+
+
+def print_piper_status() -> bool:
+    status = piper_status()
+
+    print(f"  Piper executable: {status['executable']}")
+    print(f"  Piper model:      {status['model']}")
+    print(f"  Piper config:     {status['config']}")
+
+    if not status["executable_exists"]:
+        if platform.system() == "Windows":
+            print("  Missing Piper executable. Expected models/piper/piper.exe")
+        else:
+            print("  Missing Piper executable. Expected models/piper/piper")
+
+    if not status["model_exists"]:
+        print("  Missing Piper voice model (.onnx).")
+
+    if not status["config_exists"]:
+        print("  Missing Piper voice configuration (.onnx.json).")
+
+    return bool(status["ready"])
+
+
+def _split_sentences(text: str) -> list[str]:
     parts = re.split(r"(?<=[.!?])\s+", text.strip())
-    return [p for p in parts if p.strip()]
+    return [part for part in parts if part.strip()]
 
 
 def _synthesize_to_wav(sentence: str) -> str | None:
     wav_path = None
+
     try:
         fd, wav_path = tempfile.mkstemp(prefix="paio_tts_", suffix=".wav")
         os.close(fd)
-        cmd = [_PIPER_EXE, "--model", _PIPER_MODEL, "--config", _PIPER_CONFIG,
-               "--output_file", wav_path]
-        subprocess.run(cmd, input=sentence.encode("utf-8"), check=True, stdout=subprocess.DEVNULL)
+
+        command = [
+            _PIPER_EXE,
+            "--model",
+            _PIPER_MODEL,
+            "--config",
+            _PIPER_CONFIG,
+            "--output_file",
+            wav_path,
+        ]
+
+        subprocess.run(
+            command,
+            input=sentence.encode("utf-8"),
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+        )
+
         return wav_path
-    except Exception as e:
-        print(f"  [TTS Worker] error: {e}")
+
+    except Exception as exc:
+        print(f"  [TTS Worker] Piper error: {exc}")
+
         if wav_path and os.path.exists(wav_path):
             try:
                 os.remove(wav_path)
             except OSError:
                 pass
+
         return None
 
 
 def _play_sentence_interruptible(wav_path: str) -> bool:
-    """Returns True if it played to completion, False if interrupted
-    partway through — polls every 50ms so a barge-in can cut off audio
-    mid-sentence rather than waiting for it to finish."""
+    """Return False if playback was interrupted."""
     try:
-        data, sample_rate = sf.read(wav_path, dtype="float32", always_2d=True)
+        data, sample_rate = sf.read(
+            wav_path,
+            dtype="float32",
+            always_2d=True,
+        )
+
         sd.play(data, samplerate=sample_rate)
         stream = sd.get_stream()
+
         while stream is not None and stream.active:
             if _interrupt_event.is_set():
                 sd.stop()
                 return False
+
             time.sleep(0.05)
+
         return True
+
     finally:
         if os.path.exists(wav_path):
             try:
@@ -125,8 +229,10 @@ def _play_sentence_interruptible(wav_path: str) -> bool:
 
 def _tts_worker():
     global _last_interruption
+
     while True:
         text = _tts_queue.get()
+
         if text is None:
             _tts_queue.task_done()
             break
@@ -136,17 +242,22 @@ def _tts_worker():
         spoken = []
         interrupted_at = None
 
-        for i, sentence in enumerate(sentences):
+        for index, sentence in enumerate(sentences):
             if _interrupt_event.is_set():
-                interrupted_at = i
+                interrupted_at = index
                 break
+
             wav_path = _synthesize_to_wav(sentence)
+
             if wav_path is None:
                 continue
+
             completed = _play_sentence_interruptible(wav_path)
+
             if not completed:
-                interrupted_at = i  # this sentence didn't fully play — count it as unsaid
+                interrupted_at = index
                 break
+
             spoken.append(sentence)
 
         if interrupted_at is not None:
@@ -156,8 +267,7 @@ def _tts_worker():
                     "spoken": spoken,
                     "remaining": sentences[interrupted_at:],
                 }
-            # You interrupted PAIO because you want to talk now, not
-            # because you want to hear whatever else was already queued.
+
             try:
                 while True:
                     _tts_queue.get_nowait()
@@ -168,32 +278,34 @@ def _tts_worker():
         _tts_queue.task_done()
 
 
-def load():
+def load() -> bool:
     global _worker_thread, _loaded
 
     print("  Loading Piper TTS engine ...")
 
-    if not os.path.exists(_PIPER_EXE):
-        print(f"  [TTS] Missing Piper executable: {_PIPER_EXE}")
-        print("  [TTS] Download Piper and place piper.exe + DLLs in models/piper")
+    if not print_piper_status():
+        print("  [TTS] Piper is not ready.")
+        print("  See README.md for Piper installation instructions.")
         _loaded = False
-        return
+        return False
 
-    if not os.path.exists(_PIPER_MODEL):
-        print(f"  [TTS] Missing voice model: {_PIPER_MODEL}")
-        print("  [TTS] Download en_US-bryce-medium.onnx and .onnx.json into models/piper")
-        _loaded = False
-        return
+    if platform.system() != "Windows":
+        try:
+            os.chmod(_PIPER_EXE, os.stat(_PIPER_EXE).st_mode | 0o111)
+        except OSError:
+            pass
 
-    if not os.path.exists(_PIPER_CONFIG):
-        print(f"  [TTS] Missing voice config: {_PIPER_CONFIG}")
-        _loaded = False
-        return
+    if _worker_thread is None or not _worker_thread.is_alive():
+        _worker_thread = threading.Thread(
+            target=_tts_worker,
+            daemon=True,
+            name="paio-piper-tts",
+        )
+        _worker_thread.start()
 
-    _worker_thread = threading.Thread(target=_tts_worker, daemon=True)
-    _worker_thread.start()
     _loaded = True
-    print("  ✓ TTS Background Worker ready (Piper bryce medium)")
+    print("  Piper TTS worker ready.")
+    return True
 
 
 def speak(text: str):
@@ -206,6 +318,7 @@ def speak(text: str):
         return
 
     clean_text = _clean(text)
+
     if clean_text:
         _tts_queue.put(clean_text)
 
@@ -221,17 +334,14 @@ def is_speaking() -> bool:
 
 
 def interrupt():
-    """Call this the moment a barge-in is detected (Home key pressed
-    while PAIO is talking, or voice detected mid-speech). Cuts off
-    playback within ~50ms and drops anything else queued behind it."""
+    """Immediately interrupt current Piper playback."""
     _interrupt_event.set()
 
 
 def get_and_clear_interruption() -> dict | None:
-    """One-time read: returns {"original", "spoken", "remaining"} if the
-    last utterance was cut off, else None. Clears the stored state once
-    read, so this only ever reports an interruption once."""
+    """Return and clear the latest interruption information."""
     global _last_interruption
+
     with _lock:
         result = _last_interruption
         _last_interruption = None
@@ -240,5 +350,4 @@ def get_and_clear_interruption() -> dict | None:
 
 def _clean(text: str) -> str:
     text = re.sub(r"[\*#`_-]", "", text)
-    text = text.replace("\n", " ").strip()
-    return text
+    return text.replace("\n", " ").strip()
