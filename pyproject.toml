@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paio-omni"
+version = "3.2.0"
+description = "An offline AI assistant with custom voice, Piper TTS, and Ollama support."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Other" }
+
+dependencies = [
+    "faster-whisper",
+    "sounddevice",
+    "soundfile",
+    "numpy",
+    "requests",
+    "psutil",
+    "torch",
+    "torchaudio",
+    "openai",
+    "python-dotenv",
+    "pynput",
+    "PySide6",
+    "sentence-transformers",
+    "chromadb",
+    "violawake[audio,download]",
+]
+
+[project.optional-dependencies]
+build = [
+    "pyinstaller",
+]
+dev = [
+    "pytest",
+]
+
+[project.scripts]
+paio = "paio.cli:main"
+paio-omni = "paio.cli:main"
+
+[tool.setuptools]
+py-modules = [
+    "backup_ollama",
+    "bubble",
+    "check_voices",
+    "cloud_llm",
+    "config",
+    "ensemble",
+    "hardware",
+    "jev_router",
+    "llm",
+    "memory",
+    "onboarding",
+    "orb_visuals",
+    "orchestrator",
+    "personality",
+    "rag",
+    "roles",
+    "router",
+    "stt",
+    "tester",
+    "tts",
+    "wakeword",
+    "wakeword_train",
+]
+
+[tool.setuptools.packages.find]
+include = ["paio*"]
