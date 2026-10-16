@@ -1,14 +1,48 @@
+# Secrets and local configuration
 .env
 config.json
 session_state.json
 paio.log
+
+# Local runtime data
+.paio/
+.paio-data/
 test_report.html
+
+# User wake-word recordings
 voices/*.wav
 voices/*.mp3
 voices/*.m4a
+voices/*.flac
+
+# Generated wake-word model
 models/hey_paio.onnx
+
+# Piper binaries and voice models
+# These are large external assets and should normally be downloaded locally.
+models/piper/
+
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build and packaging output
 build/
 dist/
+*.egg-info/
 *.spec.bak
+
+# IDE files
+.vscode/
+.idea/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
