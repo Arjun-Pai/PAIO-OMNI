@@ -1,19 +1,61 @@
-#!/bin/bash
-# Build the PAIO-Omni binary on Linux. Run this once, on Linux, after
-# installing requirements.txt. PyInstaller can't cross-compile, so this
-# must be run on the OS you're building for.
+#!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
-echo "Installing build dependency (PyInstaller) ..."
-pip install -q pyinstaller
+echo
+echo "=========================================="
+echo "PAIO-OmNI Linux Build"
+echo "=========================================="
+echo
 
-echo "Building PAIO-Omni ..."
-pyinstaller --noconfirm --clean PAIO-Omni.spec
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "ERROR: python3 was not found."
+    exit 1
+fi
 
-echo ""
-echo "Done. Find it at dist/PAIO-Omni/PAIO-Omni"
-echo "Copy your real .env (from .env.example) into dist/PAIO-Omni/ before running it."
-echo ""
-echo "Note: the tray icon needs a system tray host (most desktop"
-echo "environments have one; some minimal window managers don't)."
+echo "Installing build dependency..."
+python3 -m pip install --upgrade pyinstaller
+
+if [[ -d "models/piper" ]]; then
+    echo "Checking Piper assets..."
+
+    if [[ ! -f "models/piper/piper" ]]; then
+        echo "WARNING: models/piper/piper was not found."
+    else
+        chmod +x "models/piper/piper"
+    fi
+
+    if [[ ! -f "models/piper/en_US-bryce-medium.onnx" ]]; then
+        echo "WARNING: Piper voice model was not found."
+    fi
+
+    if [[ ! -f "models/piper/en_US-bryce-medium.onnx.json" ]]; then
+        echo "WARNING: Piper voice configuration was not found."
+    fi
+else
+    echo "WARNING: models/piper does not exist."
+    echo "The executable will be built without Piper assets."
+fi
+
+echo
+echo "Building PAIO-Omni..."
+python3 -m PyInstaller --noconfirm --clean PAIO-Omni.spec
+
+echo
+echo "=========================================="
+echo "Build complete"
+echo "=========================================="
+echo "Output:"
+echo "dist/PAIO-Omni/PAIO-Omni"
+echo
+
+if [[ -f ".env" ]]; then
+    echo "Copying .env into the distribution directory..."
+    cp ".env" "dist/PAIO-Omni/.env"
+else
+    echo "No .env file found."
+fi
+
+echo
+echo "Piper files, if present, were included from:"
+echo "models/piper/"
