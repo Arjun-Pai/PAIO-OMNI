@@ -1,15 +1,76 @@
 @echo off
-REM Build PAIO-Omni.exe on Windows. Run this once, on Windows, after
-REM installing requirements.txt. PyInstaller can't cross-compile, so this
-REM must be run on the OS you're building for.
+setlocal enabledelayedexpansion
 
-echo Installing build dependency (PyInstaller) ...
-pip install -q pyinstaller
-
-echo Building PAIO-Omni.exe ...
-pyinstaller --noconfirm --clean PAIO-Omni.spec
+REM Build PAIO-Omni on Windows.
+REM Run this script from the repository root.
 
 echo.
-echo Done. Find it at dist\PAIO-Omni\PAIO-Omni.exe
-echo Copy your real .env (from .env.example) into dist\PAIO-Omni\ before running it.
+echo ==========================================
+echo PAIO-Omni Windows Build
+echo ==========================================
+echo.
+
+where python >nul 2>nul
+if errorlevel 1 (
+    echo ERROR: Python was not found.
+    echo Install Python 3.10 or newer and try again.
+    exit /b 1
+)
+
+echo Installing build dependency...
+python -m pip install --upgrade pyinstaller
+if errorlevel 1 (
+    echo ERROR: Could not install PyInstaller.
+    exit /b 1
+)
+
+if not exist "models\piper" (
+    echo WARNING: models\piper does not exist.
+    echo The executable will be built without Piper assets.
+    echo Install Piper before building if voice output should be bundled.
+) else (
+    if not exist "models\piper\piper.exe" (
+        echo WARNING: models\piper\piper.exe was not found.
+    )
+
+    if not exist "models\piper\en_US-bryce-medium.onnx" (
+        echo WARNING: Piper voice model was not found.
+    )
+
+    if not exist "models\piper\en_US-bryce-medium.onnx.json" (
+        echo WARNING: Piper voice configuration was not found.
+    )
+)
+
+echo.
+echo Building PAIO-Omni...
+python -m PyInstaller --noconfirm --clean PAIO-Omni.spec
+
+if errorlevel 1 (
+    echo.
+    echo ERROR: PyInstaller build failed.
+    exit /b 1
+)
+
+echo.
+echo ==========================================
+echo Build complete
+echo ==========================================
+echo Output:
+echo dist\PAIO-Omni\PAIO-Omni.exe
+echo.
+
+if exist ".env" (
+    echo Copying .env into the distribution directory...
+    copy /Y ".env" "dist\PAIO-Omni\.env" >nul
+) else (
+    echo No .env file found. Cloud providers will need configuration later.
+)
+
+echo.
+echo Piper files, if present, were included from:
+echo models\piper\
+echo.
+
+endlocal
 pause
