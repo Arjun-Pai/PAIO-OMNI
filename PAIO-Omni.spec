@@ -1,64 +1,76 @@
-# PAIO-Omni PyInstaller build specification.
-#
-# Piper assets are included when the models/piper directory exists.
-# Large Piper binaries and voice files are normally downloaded separately
-# and should not be committed to the source repository.
+@echo off
+setlocal enabledelayedexpansion
 
-from pathlib import Path
+REM Build PAIO-Omni on Windows.
+REM Run this script from the repository root.
 
+echo.
+echo ==========================================
+echo PAIO-Omni Windows Build
+echo ==========================================
+echo.
 
-PROJECT_ROOT = Path(SPEC).resolve().parent
-PIPER_DIR = PROJECT_ROOT / "models" / "piper"
-
-
-def existing_data(path: Path, destination: str):
-    if path.exists():
-        return [(str(path), destination)]
-    return []
-
-
-datas = [
-    *existing_data(PROJECT_ROOT / "personality.md", "."),
-    *existing_data(PROJECT_ROOT / ".env.example", "."),
-    *existing_data(PROJECT_ROOT / "my_voice.wav", "."),
-    *existing_data(PIPER_DIR, "models/piper"),
-]
-
-hiddenimports = [
-    "violawake_sdk",
-    "pynput.keyboard._win32",
-    "pynput.keyboard._darwin",
-    "pynput.keyboard._xorg",
-    "chromadb.telemetry.product.posthog",
-    "sentence_transformers",
-    "onnxruntime",
-]
-
-a = Analysis(
-    ["onboarding.py"],
-    pathex=[str(PROJECT_ROOT)],
-    binaries=[],
-    datas=datas,
-    hiddenimports=hiddenimports,
-    hookspath=[],
-    runtime_hooks=[],
-    excludes=[],
-    noarchive=False,
+where python >nul 2>nul
+if errorlevel 1 (
+    echo ERROR: Python was not found.
+    echo Install Python 3.10 or newer and try again.
+    exit /b 1
 )
 
-pyz = PYZ(a.pure)
-
-exe = EXE(
-    pyz,
-    a.scripts,
-    a.binaries,
-    a.datas,
-    [],
-    name="PAIO-Omni",
-    debug=False,
-    bootloader_ignore_signals=False,
-    strip=False,
-    upx=True,
-    console=True,
-    icon=None,
+echo Installing build dependency...
+python -m pip install --upgrade pyinstaller
+if errorlevel 1 (
+    echo ERROR: Could not install PyInstaller.
+    exit /b 1
 )
+
+if not exist "models\piper" (
+    echo WARNING: models\piper does not exist.
+    echo The executable will be built without Piper assets.
+    echo Install Piper before building if voice output should be bundled.
+) else (
+    if not exist "models\piper\piper.exe" (
+        echo WARNING: models\piper\piper.exe was not found.
+    )
+
+    if not exist "models\piper\en_US-bryce-medium.onnx" (
+        echo WARNING: Piper voice model was not found.
+    )
+
+    if not exist "models\piper\en_US-bryce-medium.onnx.json" (
+        echo WARNING: Piper voice configuration was not found.
+    )
+)
+
+echo.
+echo Building PAIO-Omni...
+python -m PyInstaller --noconfirm --clean PAIO-Omni.spec
+
+if errorlevel 1 (
+    echo.
+    echo ERROR: PyInstaller build failed.
+    exit /b 1
+)
+
+echo.
+echo ==========================================
+echo Build complete
+echo ==========================================
+echo Output:
+echo dist\PAIO-Omni\PAIO-Omni.exe
+echo.
+
+if exist ".env" (
+    echo Copying .env into the distribution directory...
+    copy /Y ".env" "dist\PAIO-Omni\.env" >nul
+) else (
+    echo No .env file found. Cloud providers will need configuration later.
+)
+
+echo.
+echo Piper files, if present, were included from:
+echo models\piper\
+echo.
+
+endlocal
+pause
