@@ -1,34 +1,45 @@
-# PAIO-Omni.spec — PyInstaller build spec, shared across all three OS
-# build scripts. Run via the matching build_*.{bat,sh} for your platform
-# rather than calling pyinstaller directly, so the right extra-data paths
-# (Piper models, .env) are bundled correctly.
+# PAIO-Omni PyInstaller build specification.
 #
-# Note: sentence-transformers downloads its embedding model
-# (all-MiniLM-L6-v2) to a local cache on first use rather than bundling
-# it here — the built executable will need internet on its very first
-# RAG-indexing run to fetch it (one-time, then cached).
+# Piper assets are included when the models/piper directory exists.
+# Large Piper binaries and voice files are normally downloaded separately
+# and should not be committed to the source repository.
 
-# -*- mode: python ; coding: utf-8 -*-
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(SPEC).resolve().parent
+PIPER_DIR = PROJECT_ROOT / "models" / "piper"
+
+
+def existing_data(path: Path, destination: str):
+    if path.exists():
+        return [(str(path), destination)]
+    return []
+
+
+datas = [
+    *existing_data(PROJECT_ROOT / "personality.md", "."),
+    *existing_data(PROJECT_ROOT / ".env.example", "."),
+    *existing_data(PROJECT_ROOT / "my_voice.wav", "."),
+    *existing_data(PIPER_DIR, "models/piper"),
+]
+
+hiddenimports = [
+    "violawake_sdk",
+    "pynput.keyboard._win32",
+    "pynput.keyboard._darwin",
+    "pynput.keyboard._xorg",
+    "chromadb.telemetry.product.posthog",
+    "sentence_transformers",
+    "onnxruntime",
+]
 
 a = Analysis(
-    ['onboarding.py'],
-    pathex=[],
+    ["onboarding.py"],
+    pathex=[str(PROJECT_ROOT)],
     binaries=[],
-    datas=[
-        ('models', 'models'),
-        ('personality.md', '.'),
-        ('.env.example', '.'),
-        ('my_voice.wav', '.'),
-    ],
-    hiddenimports=[
-        'violawake_sdk',
-        'pynput.keyboard._win32',
-        'pynput.keyboard._darwin',
-        'pynput.keyboard._xorg',
-        'chromadb.telemetry.product.posthog',
-        'sentence_transformers',
-        'onnxruntime',
-    ],
+    datas=datas,
+    hiddenimports=hiddenimports,
     hookspath=[],
     runtime_hooks=[],
     excludes=[],
@@ -43,11 +54,11 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='PAIO-Omni',
+    name="PAIO-Omni",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=True,   # keep the console — bubble.py manages the window itself
+    console=True,
     icon=None,
 )
