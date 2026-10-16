@@ -1,4 +1,5 @@
 # PAIO-Omni 3.2
+<img width="1366" height="678" alt="image" src="https://github.com/user-attachments/assets/5e27d4da-ca6d-4b05-abb7-1e56c9a3aaf5" />
 
 Your real-life Jarvis — a native floating orb, trained on your own
 voice, that remembers you, thinks in your own personality, scales its
